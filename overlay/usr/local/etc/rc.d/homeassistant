@@ -4,6 +4,9 @@
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
 #
+# Originally obtained from https://github.com/tprelog/iocage-homeassistant/tree/master/overlay/usr/local/etc/rc.d
+# on 2022-08-27
+#
 # VERSION: 20220713
 #
 # homeassistant_enable: Enable the Home Assistant Core service.
@@ -28,7 +31,7 @@
 #
 # homeassistant_venv: Path to directory, where the Home Assistant Core virtualenv is located or will be created.
 #       https://github.com/home-assistant/architecture/blob/master/adr/0016-home-assistant-core.md
-#       Default:  "/usr/local/share/homeassistant"
+#       Default:  "/srv/homeassistant"
 #
 # homeassistant_python: Set a supported version of Python to be used when creating the virtualenv for Home Assistant Core.
 #       https://github.com/home-assistant/architecture/blob/master/adr/0016-home-assistant-core.md#supported-python-versions
@@ -45,7 +48,7 @@ rcvar=${name}_enable
 : "${homeassistant_rc_debug:="NO"}"
 : "${homeassistant_user:="homeassistant"}"
 : "${homeassistant_python:="NOT_SET"}"
-: "${homeassistant_venv:="/usr/local/share/homeassistant"}"
+: "${homeassistant_venv:="/srv/homeassistant"}"
 : "${homeassistant_safe_mode:="NO"}"
 : "${homeassistant_debug:="NO"}"
 : "${homeassistant_skip_pip:="NO"}"
@@ -69,9 +72,9 @@ else
   : "${homeassistant_config_dir:="${homeassistant_user_dir}/.${name}"}"
 fi
 
-[ -n "${homeassistant_cpath:-}" ] && export CPATH="${homeassistant_cpath}"
-[ -n "${homeassistant_library_path:-}" ] && export LIBRARY_PATH="${homeassistant_library_path}"
-[ -n "${homeassistant_path:-}" ] && export PATH="${homeassistant_path}"
+#[ -n "${homeassistant_cpath:-}" ] && export CPATH="${homeassistant_cpath}"
+#[ -n "${homeassistant_library_path:-}" ] && export LIBRARY_PATH="${homeassistant_library_path}"
+#[ -n "${homeassistant_path:-}" ] && export PATH="${homeassistant_path}"
 
 umask "${homeassistant_umask:-022}"
 
@@ -224,6 +227,8 @@ homeassistant_logs() {
 
 upgrade_cmd="${name}_upgrade"
 homeassistant_upgrade() {
+  echo "no, I'm not running that."
+  exit
   homeassistant_precmd
   run_rc_command stop 2>/dev/null ; local _rcstop_=${?}
   homeassistant_install --upgrade "${name}"
@@ -232,6 +237,8 @@ homeassistant_upgrade() {
 
 install_cmd="${name}_install ${*}"
 homeassistant_install() {
+  echo "no, I'm not running that."
+  exit
   [ "${1}" == "install" ] || [ "${1}" == "oneinstall" ] && shift
   local _create_ _arg_
   _arg_="${*:-"${name}"}"
@@ -267,6 +274,8 @@ homeassistant_install() {
 
 reinstall_cmd="${name}_reinstall ${*}"
 homeassistant_reinstall() {
+  echo "no, I'm not running that."
+  exit
   [ "${1}" == "reinstall" ] || [ "${1}" == "onereinstall" ] && shift
   local _ans1_ _ans2_ _rcstop_ _version_ _arg_
   homeassistant_precmd
